@@ -4,7 +4,8 @@ import pickle
 import numpy as np
 from model import ToyModel
 from transformer import Cost_Transformer
-
+import os
+import json
 app = Flask(__name__)
 api = Api(app)
 
@@ -29,16 +30,17 @@ class PredictToy(Resource):
         # use parser and find the user's query
         args = parser.parse_args()
         user_query = args['query']
+        print(user_query)
+        predict_proba = model.predict(json.loads(user_query.replace("\'", "\"")))
+        print(predict_proba)
 
-        predict_proba = model.predict(user_query)
+        results = {'results':[]}
 
-        # Output either 'Negative' or 'Positive' along with the score
-        prediction = get_prediction(predict_proba[0])
+        for proba in predict_proba[:,1]:
+            results['results'].append({'label': get_prediction(proba), 'ModelScore':proba})
 
-        # create JSON object
-        output = {'prediction': prediction, 'ModelScore': round(predict_proba[0], 3)}
         
-        return output
+        return results
 
 
 # Setup the Api resource routing here
@@ -47,4 +49,4 @@ api.add_resource(PredictToy, '/')
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host = "0.0.0.0", port= int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host = "0.0.0.0", port= int(os.environ.get("PORT", 5000)))

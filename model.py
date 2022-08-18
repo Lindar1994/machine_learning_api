@@ -8,11 +8,17 @@ class ToyModel(object):
     def __init__(self):
         pass
     def build_model(self):
+        """
+        Building model pipeline 
+        """
         steps = [('ctf', Cost_Transformer()),
          ('rescale', MinMaxScaler()),
          ('logr', LogisticRegression())]
         self.pipeline = Pipeline(steps)
     def train(self):
+        """
+        Train a model 
+        """
         df = pd.read_csv('data/sales.csv')
         df.dropna(subset=['price'], inplace=True)
         
@@ -28,6 +34,10 @@ class ToyModel(object):
         self.model = self.pipeline.fit(X_train, y_train)
     
     def predict(self, context):
+        """
+        context: dictionary format {'cost':'$300k'... etc}
+        return np.array
+        """
         num_predictions = len(context[self.features[0]])
         X = pd.DataFrame(context,index=range(num_predictions))
         return self.model.predict_proba(X)

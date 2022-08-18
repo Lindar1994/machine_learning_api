@@ -12,7 +12,7 @@ sudo apt-get install zip unzip
 ```
 pip3 install -r requirements.txt 
 ```
-* Watch `Making Web App Available to End Users` & set up firewall & run those commands on gcp instance 
+* Watch `Making Web App Available to End Users` on techlent & set up firewall & run those commands on gcp instance 
 * To test whether the api works, in a jupyter notebook
 ```import requests
 df = pd.read_csv('data/sales.csv')

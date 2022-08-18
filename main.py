@@ -6,6 +6,7 @@ from model import ToyModel
 from transformer import Cost_Transformer
 import os
 import json
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -30,16 +31,11 @@ class PredictToy(Resource):
         # use parser and find the user's query
         args = parser.parse_args()
         user_query = args['query']
-        print(user_query)
+        # json needs to replace single quote with double 
         predict_proba = model.predict(json.loads(user_query.replace("\'", "\"")))
-        print(predict_proba)
-
         results = {'results':[]}
-
         for proba in predict_proba[:,1]:
-            results['results'].append({'label': get_prediction(proba), 'ModelScore':proba})
-
-        
+            results['results'].append({'label': get_prediction(proba), 'ModelScore':proba})      
         return results
 
 
